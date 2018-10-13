@@ -1,0 +1,15 @@
+{
+  "name": "@mojility/maxim-engine",
+  "version": "1.0.0",
+  "description": "A simplistic (for now) rules engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha specs"
+  },
+  "author": "Stacey Vetzal <stacey@vetzal.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
+}
