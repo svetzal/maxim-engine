@@ -1,13 +1,13 @@
 const expect = require('chai').expect;
 
-const RuleEngine = require('../src/rule_engine');
+const MaximEngine = require('../src/maxim_engine');
 
-describe("RuleEngine", () => {
+describe("MaximEngine", () => {
 
     var engine;
 
     beforeEach(() => {
-        engine = new RuleEngine();
+        engine = new MaximEngine();
     });
 
     it("should register a single rule", () => {

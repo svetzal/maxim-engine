@@ -1,3 +1,3 @@
-const RuleEngine = require('./src/rule_engine');
+const MaximEngine = require('./src/maxim_engine');
 
-module.exports = { RuleEngine };
+module.exports = { MaximEngine };

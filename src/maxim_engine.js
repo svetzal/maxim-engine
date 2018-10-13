@@ -1,4 +1,4 @@
-class RuleEngine {
+class MaximEngine {
     constructor() {
         this.rules = [];
     }
@@ -31,4 +31,4 @@ class RuleEngine {
     }
 }
 
-module.exports = RuleEngine;
+module.exports = MaximEngine;
