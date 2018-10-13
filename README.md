@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.org/svetzal/maxim-engine.svg?branch=master)
+
 # Maxim Engine
 
 Maxim is a simple rule engine, really simple for now. I'd like one day to make it better, but I haven't yet.
