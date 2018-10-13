@@ -1,6 +1,6 @@
 {
-  "name": "@mojility/maxim-engine",
-  "version": "1.0.0",
+  "name": "maxim-engine",
+  "version": "0.9.0",
   "description": "A simplistic (for now) rules engine",
   "main": "index.js",
   "scripts": {
