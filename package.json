@@ -1,13 +1,22 @@
 {
   "name": "maxim-engine",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A simplistic (for now) rules engine",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/svetzal/maxim-engine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/svetzal/maxim-engine/issues"
+  },
+  "homepage": "https://github.com/svetzal/maxim-engine",
+  "keywords": ["rules engine", "simmple", "lightweight"],
+  "author": "Stacey Vetzal <stacey@vetzal.com>",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "test": "mocha specs"
   },
-  "author": "Stacey Vetzal <stacey@vetzal.com>",
-  "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^5.2.0"
