@@ -48,4 +48,15 @@ describe("MaximEngine", () => {
         expect(output).to.deep.equal({data: transformedValue});
     });
 
+    // Playground
+    xit("should handle new style rules", () => {
+        let initialValue = "initial";
+        let transformedValue = "transformed";
+
+        let r = {
+            condition: (wm) => wm.get("data") === initialvalue,
+            consequence: (wm) => wm.set("data", transformedValue)
+        };
+    });
+
 });
