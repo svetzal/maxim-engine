@@ -19,11 +19,16 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=lcov mocha specs"
+    "test": "nyc --reporter=lcov mocha specs",
+    "spec": "mocha specs"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "sinon": "^7.1.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11"
   }
 }
