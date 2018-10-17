@@ -5,6 +5,7 @@ class MaximEngine {
         let noMutateLambda = () => { throw("You cannot mutate the working memory in a condition") };
 
         this.conditionProxyHandler = {
+            get: (target, prop) => Reflect.get(target, prop), // Use this trap to capture properties with which the condition is concerned
             set: noMutateLambda,
             defineProperty: noMutateLambda,
             deleteProperty: noMutateLambda
