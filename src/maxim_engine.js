@@ -1,6 +1,14 @@
 class MaximEngine {
     constructor() {
         this.rules = [];
+
+        let noMutateLambda = () => { throw("You cannot mutate the working memory in a condition") };
+
+        this.conditionProxyHandler = {
+            set: noMutateLambda,
+            defineProperty: noMutateLambda,
+            deleteProperty: noMutateLambda
+        };
     }
 
     register(param) {
@@ -15,7 +23,7 @@ class MaximEngine {
 
     execute(workingMemory) {
         return this.rules
-            .filter(r => r.condition(workingMemory))
+            .filter(r => r.condition(new Proxy(workingMemory, this.conditionProxyHandler)))
             .reduce(this.runConsequence, workingMemory);
     }
 
