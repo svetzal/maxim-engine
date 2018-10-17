@@ -1,4 +1,13 @@
 language: node_js
 node_js:
-  - '6'
-  - '8'
+- '6'
+- '8'
+deploy:
+  provider: npm
+  email: stacey@vetzal.com
+  api_key:
+    secure: Mq5KzjPFksvqBkC/65NoINUl+3tMTrHf+MZjga206X0w0P+0lQcHCGMNLPzsewOD5Ix+zNjf+QXS5NhwI9XtFuQgyjvYQRWG5ZKptZbINjASGnctDu/mV1XU6J1geuaYHIXdFBH4FEvr5cQnP6cNoTPmkAN1qI7d7BK2+6zWzwfWLpk84RIrhY3M1uCQnkjOH22RWEG8UZBXgEMbn8hvOmYH75FFztBFdjikgkkBlweW6WeDmHHX7+Ehp6TbLWUXirISeqR/g/Gul0wBwbSLU6lkULR1Hz9NjHlAOLC/F1MSzMOXONutkngEsWecBNZXYB6QBwPmQ01I9wMJ8saRFspnYcQN8mvHHnu6Vpc65y7T/LK/dDRy+Ps9WtnB/elezbGcqfcktLxM3cCc76qSTYDIbY3BGl8m36NR1L+kQCDMhpKidMnO0Cim0Vv4SGZ/S8iGU4v4amPwtvx87W9O1NGLJsFetggFwuK3FQ9nR6qdijZUr0izwlGG+kJ/CU+SLmIwmIpJCRGVCqWDL8FEYpY1K3MF03ln9LMTVfOYgFwuqheginsPRH6Z1roFgyHGOz6A62b2npGJzx0ZZAGFJdspOM/bXDQsyddne9dMg8aIQkKmd3L+EF0o2bgx+0lYCT4b9h6SiNlOBPLoPUQ7ucydABtObIzAgk/+XDvIllg=
+  on:
+    branch: master
+    tags: true
+    repo: svetzal/maxim-engine
