@@ -39,8 +39,8 @@ describe("MaximEngine", () => {
         let initialValue = "initial";
         let transformedValue = "transformed";
         engine.register({
-            condition: (wm) => wm.data === initialValue,
-            consequence: (wm) => wm.data = transformedValue
+            condition: wm => wm.data === initialValue,
+            consequence: wm => wm.data = transformedValue
         });
 
         let output = engine.execute({data: initialValue});
@@ -48,15 +48,30 @@ describe("MaximEngine", () => {
         expect(output).to.deep.equal({data: transformedValue});
     });
 
-    // Playground
-    xit("should handle new style rules", () => {
-        let initialValue = "initial";
-        let transformedValue = "transformed";
+    it("should not be able to mutate working memory in a condition", () => {
+        engine.register({
+            condition: wm => wm.message = "goodbye",
+            consequence: wm => wm
+        });
 
-        let r = {
-            condition: (wm) => wm.get("data") === initialvalue,
-            consequence: (wm) => wm.set("data", transformedValue)
-        };
+        expect(() => engine.execute({})).to.throw();
     });
 
+    it("should not be able to create a property in working memory", () => {
+        engine.register({
+            condition: wm => Object.defineProperty(wm, 'message', {value: "goodbye"}),
+            consequence: wm => wm
+        });
+
+        expect(() => engine.execute({})).to.throw();
+    });
+
+    it("should not be able to delete a property in working memory", () => {
+        engine.register({
+            condition: wm => delete wm.message,
+            consequence: wm => wm
+        });
+
+        expect(() => engine.execute({})).to.throw();
+    });
 });
