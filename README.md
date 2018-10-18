@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/svetzal/maxim-engine.svg?branch=master)](https://travis-ci.org/svetzal/maxim-engine)
 [![Code Quality](https://api.codeclimate.com/v1/badges/ce3c1b2c628677b1c330/maintainability)](https://codeclimate.com/github/svetzal/maxim-engine/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ce3c1b2c628677b1c330/test_coverage)](https://codeclimate.com/github/svetzal/maxim-engine/test_coverage)
 
 # Maxim Engine
 
