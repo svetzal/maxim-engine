@@ -19,10 +19,11 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "mocha specs"
+    "test": "nyc mocha specs"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0"
   }
 }
