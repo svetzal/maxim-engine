@@ -1,15 +1,9 @@
+const ReadOnlyProxyBuilder = require('./read_only_proxy_builder');
+
 class MaximEngine {
     constructor() {
         this.rules = [];
-
-        let noMutateLambda = () => { throw("You cannot mutate the working memory in a condition") };
-
-        this.conditionProxyHandler = {
-            get: (target, prop) => Reflect.get(target, prop), // Use this trap to capture properties with which the condition is concerned
-            set: noMutateLambda,
-            defineProperty: noMutateLambda,
-            deleteProperty: noMutateLambda
-        };
+        this.readOnlyProxyBuilder = new ReadOnlyProxyBuilder();
     }
 
     register(param) {
@@ -24,7 +18,7 @@ class MaximEngine {
 
     execute(workingMemory) {
         return this.rules
-            .filter(r => r.condition(new Proxy(workingMemory, this.conditionProxyHandler)))
+            .filter(r => r.condition(this.readOnlyProxyBuilder.build(workingMemory)))
             .reduce(this.runConsequence, workingMemory);
     }
 

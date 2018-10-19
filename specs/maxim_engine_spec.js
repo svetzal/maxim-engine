@@ -57,21 +57,4 @@ describe("MaximEngine", () => {
         expect(() => engine.execute({})).to.throw();
     });
 
-    it("should not be able to create a property in working memory", () => {
-        engine.register({
-            condition: wm => Object.defineProperty(wm, 'message', {value: "goodbye"}),
-            consequence: wm => wm
-        });
-
-        expect(() => engine.execute({})).to.throw();
-    });
-
-    it("should not be able to delete a property in working memory", () => {
-        engine.register({
-            condition: wm => delete wm.message,
-            consequence: wm => wm
-        });
-
-        expect(() => engine.execute({})).to.throw();
-    });
 });
