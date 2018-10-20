@@ -1,5 +1,7 @@
 const expect = require('chai').expect;
 
+const PropertyUseAnalyzer = require('../src/property_use_analyzer');
+const ReadOnlyProxyBuilder = require('../src/read_only_proxy_builder');
 const MaximEngine = require('../src/maxim_engine');
 
 describe("MaximEngine", () => {
@@ -7,7 +9,7 @@ describe("MaximEngine", () => {
     var engine;
 
     beforeEach(() => {
-        engine = new MaximEngine();
+        engine = new MaximEngine(new ReadOnlyProxyBuilder(new PropertyUseAnalyzer()));
     });
 
     it("should register a single rule", () => {

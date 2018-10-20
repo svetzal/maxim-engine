@@ -1,11 +1,14 @@
 class ReadOnlyProxyBuilder {
-    constructor() {
+    constructor(propertyListener) {
+        this.propertyListener = propertyListener;
+
         let noMutateLambda = () => {
             throw("You cannot mutate the working memory in a condition");
         };
 
         this.getProxyHandler = {
             get: (target, prop) => {
+                this.propertyListener.registerProperty(prop);
                 let nt = Reflect.get(target, prop);
                 if (typeof(nt) === "object")
                     nt = new Proxy(nt, this.buildProxyHandlers());
