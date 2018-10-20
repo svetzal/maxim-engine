@@ -1,9 +1,9 @@
 const ReadOnlyProxyBuilder = require('./read_only_proxy_builder');
 
 class MaximEngine {
-    constructor() {
+    constructor(readOnlyProxyBuilder) {
         this.rules = [];
-        this.readOnlyProxyBuilder = new ReadOnlyProxyBuilder();
+        this.readOnlyProxyBuilder = readOnlyProxyBuilder;
     }
 
     register(param) {
