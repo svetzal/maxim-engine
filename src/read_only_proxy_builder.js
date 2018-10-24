@@ -11,7 +11,7 @@ class ReadOnlyProxyBuilder {
                 this.propertyListener.registerProperty(prop);
                 let nt = Reflect.get(target, prop);
                 if (typeof(nt) === "object")
-                    nt = new Proxy(nt, this.buildProxyHandlers());
+                    nt = this.build(nt);
                 return nt;
             }
         };
