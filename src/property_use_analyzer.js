@@ -4,8 +4,8 @@ class PropertyUseAnalyzer {
         this.properties = new Set();
     }
 
-    registerProperty(propertyName) {
-        this.properties.add(propertyName);
+    registerProperty(propertyPath) {
+        this.properties.add(propertyPath);
     }
 
     getReferencedProperties() {

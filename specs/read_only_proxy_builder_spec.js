@@ -85,27 +85,27 @@ describe('ReadOnlyProxyBuilder', () => {
         it('should register single property usage', () => {
             let proxy = builder.build({ key: 123, message: 'hello' });
             let a = proxy.message;
-            expect(listener.getReferencedProperties()).to.deep.equal(['message']);
+            expect(listener.getReferencedProperties()).to.deep.equal([['message']]);
         });
 
         it('should register multiple property usages', () => {
             let proxy = builder.build({ key: 123, message: 'hello' });
             let a = proxy.message;
             let b = proxy.key;
-            expect(listener.getReferencedProperties()).to.deep.equal(['key', 'message']);
+            expect(listener.getReferencedProperties()).to.deep.equal([['key'], ['message']]);
         });
 
         it('should register nested property usages', () => {
             let proxy = builder.build({ key: 123, obj: { message: 'hello' } } );
             let a = proxy.obj.message;
-            expect(listener.getReferencedProperties()).to.deep.equal(['message','obj']);
+            expect(listener.getReferencedProperties()).to.deep.equal([['obj'], ['obj', 'message']]);
         });
 
         it('should discern nested properties of the same name', () => {
             let proxy = builder.build({ a: { message: 'one' }, b: { message: 'two' } });
             let one = proxy.a.message;
-            // TODO: Need to have a mechanism to discern these, thinking properties should have a path ref ie. ['a', 'message']
-            expect(listener.getReferencedProperties()).to.deep.equal(['a', 'message']);
+            let two = proxy.b.message;
+            expect(listener.getReferencedProperties()).to.deep.equal([['a'], ['a', 'message'], ['b'], ['b', 'message']]);
         });
 
     });
