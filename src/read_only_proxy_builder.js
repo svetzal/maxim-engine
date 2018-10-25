@@ -2,36 +2,34 @@ class ReadOnlyProxyBuilder {
     constructor(propertyListener) {
         this.propertyListener = propertyListener;
 
+        this.getProxyHandlerWithPath = (target, prop, parentPath) => {
+            let propertyPath = typeof(parentPath) === 'undefined' ? [prop] : parentPath.concat([prop]);
+            this.propertyListener.registerProperty(propertyPath);
+            let nt = Reflect.get(target, prop);
+            if (typeof(nt) === "object")
+                {
+                    nt = this.build(nt, propertyPath);
+                }
+            return nt;
+        };
+    }
+
+    buildProxyHandlers(parentPath) {
         let noMutateLambda = () => {
             throw("You cannot mutate the working memory in a condition");
         };
 
-        this.getProxyHandler = {
-            get: (target, prop) => {
-                this.propertyListener.registerProperty(prop);
-                let nt = Reflect.get(target, prop);
-                if (typeof(nt) === "object")
-                    nt = this.build(nt);
-                return nt;
-            }
-        };
-        this.setProxyHandler = {set: noMutateLambda};
-        this.definePropertyProxyHandler = {defineProperty: noMutateLambda};
-        this.deletePropertyProxyHandler = {deleteProperty: noMutateLambda};
-    }
-
-    buildProxyHandlers() {
         return Object.assign(
             {},
-            this.getProxyHandler,
-            this.setProxyHandler,
-            this.definePropertyProxyHandler,
-            this.deletePropertyProxyHandler
+            {get: (target, prop) => this.getProxyHandlerWithPath(target, prop, parentPath)},
+            {set: noMutateLambda},
+            {defineProperty: noMutateLambda},
+            {deleteProperty: noMutateLambda}
         );
     }
 
-    build(obj) {
-        return new Proxy(obj, this.buildProxyHandlers());
+    build(obj, parentPath) {
+        return new Proxy(obj, this.buildProxyHandlers(parentPath));
     }
 }
 

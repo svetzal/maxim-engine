@@ -37,7 +37,7 @@ describe("MaximEngine", () => {
         expect(engine.execute(workingMemory)).to.deep.equal(workingMemory);
     });
 
-    it("should process a simple rule", () => {
+    xit("should process a simple rule", () => {
         let initialValue = "initial";
         let transformedValue = "transformed";
         engine.register({
