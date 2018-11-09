@@ -1,15 +1,16 @@
-class ReadOnlyProxyBuilder {
-    constructor(propertyListener) {
-        this.propertyListener = propertyListener;
+const PropertyBuilder = require('./property_builder');
 
+class ReadOnlyProxyBuilder extends PropertyBuilder {
+    constructor(listener) {
+        super(listener);
         this.getProxyHandlerWithPath = (target, prop, parentPath) => {
             let propertyPath = typeof(parentPath) === 'undefined' ? [prop] : parentPath.concat([prop]);
-            this.propertyListener.registerProperty(propertyPath);
+            this.propertyUseAnalyzer.registerProperty(propertyPath);
             let nt = Reflect.get(target, prop);
             if (typeof(nt) === "object")
-                {
-                    nt = this.build(nt, propertyPath);
-                }
+            {
+                nt = this.build(nt, propertyPath);
+            }
             return nt;
         };
     }
