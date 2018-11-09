@@ -1,41 +1,29 @@
-const PropertyBuilder = require('./property_builder');
+const ProxyBuilder = require('./proxy_builder');
 
-class WriteThroughProxyBuilder extends PropertyBuilder {
-    constructor(listener) {
-        super(listener);
-
-        this.getProxyHandlerWithPath = (target, prop, parentPath) => {
-            let propertyPath = typeof(parentPath) === 'undefined' ? [prop] : parentPath.concat([prop]);
-            let nt = Reflect.get(target, prop);
-            if (typeof(nt) === "object")
-            {
-                nt = this.wrap(nt, propertyPath);
-            }
-            return nt;
-        };
+class WriteThroughProxyBuilder extends ProxyBuilder {
+    constructor(propertyUseAnalyzer) {
+        super(propertyUseAnalyzer);
 
         this.setProxyHandlerWithPath = (target, prop, value, parentPath) => {
-            let propertyPath = typeof(parentPath) === 'undefined' ? [prop] : parentPath.concat([prop]);
             let changed = Reflect.set(target, prop, value);
-            if (changed) this.propertyUseAnalyzer.registerProperty(propertyPath);
+            if (changed) this.propertyUseAnalyzer.registerProperty(this.createPath(parentPath, prop));
             return changed;
         };
 
         this.defineProxyHandlerWithPath = (target, prop, value, parentPath) => {
-            let propertyPath = typeof(parentPath) === 'undefined' ? [prop] : parentPath.concat([prop]);
             let changed = Reflect.defineProperty(target, prop, value);
-            if (changed) this.propertyUseAnalyzer.registerProperty(propertyPath);
+            if (changed) this.propertyUseAnalyzer.registerProperty(this.createPath(parentPath, prop));
             return changed;
         };
 
         this.deleteProxyHandlerWithPath = (target, prop, parentPath) => {
-            let propertyPath = typeof(parentPath) === 'undefined' ? [prop] : parentPath.concat([prop]);
             let changed = Reflect.deleteProperty(target, prop);
-            if (changed) this.propertyUseAnalyzer.registerProperty(propertyPath);
+            if (changed) this.propertyUseAnalyzer.registerProperty(this.createPath(parentPath, prop));
             return changed;
         };
 
     }
+
     buildProxyHandlers(parentPath) {
         return Object.assign(
             {},
@@ -45,11 +33,6 @@ class WriteThroughProxyBuilder extends PropertyBuilder {
             {deleteProperty: (target, prop) => this.deleteProxyHandlerWithPath(target, prop, parentPath)}
         );
     }
-
-    wrap(obj, parentPath) {
-        return new Proxy(obj, this.buildProxyHandlers(parentPath));
-    }
-
 }
 
 module.exports = WriteThroughProxyBuilder;
