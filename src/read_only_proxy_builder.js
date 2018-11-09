@@ -5,12 +5,12 @@ class ReadOnlyProxyBuilder extends PropertyBuilder {
         super(listener);
         this.getProxyHandlerWithPath = (target, prop, parentPath) => {
             let propertyPath = typeof(parentPath) === 'undefined' ? [prop] : parentPath.concat([prop]);
-            this.propertyUseAnalyzer.registerProperty(propertyPath);
             let nt = Reflect.get(target, prop);
             if (typeof(nt) === "object")
             {
-                nt = this.build(nt, propertyPath);
+                nt = this.wrap(nt, propertyPath);
             }
+            this.propertyUseAnalyzer.registerProperty(propertyPath);
             return nt;
         };
     }
@@ -29,7 +29,7 @@ class ReadOnlyProxyBuilder extends PropertyBuilder {
         );
     }
 
-    build(obj, parentPath) {
+    wrap(obj, parentPath) {
         return new Proxy(obj, this.buildProxyHandlers(parentPath));
     }
 }
