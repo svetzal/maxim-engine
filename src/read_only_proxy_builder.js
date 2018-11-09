@@ -1,18 +1,14 @@
-const PropertyBuilder = require('./property_builder');
+const ProxyBuilder = require('./proxy_builder');
 
-class ReadOnlyProxyBuilder extends PropertyBuilder {
-    constructor(listener) {
-        super(listener);
-        this.getProxyHandlerWithPath = (target, prop, parentPath) => {
-            let propertyPath = typeof(parentPath) === 'undefined' ? [prop] : parentPath.concat([prop]);
-            let nt = Reflect.get(target, prop);
-            if (typeof(nt) === "object")
-            {
-                nt = this.wrap(nt, propertyPath);
-            }
-            this.propertyUseAnalyzer.registerProperty(propertyPath);
-            return nt;
-        };
+class ReadOnlyProxyBuilder extends ProxyBuilder {
+    constructor(propertyUseAnalyzer) {
+        super(propertyUseAnalyzer);
+
+        this.getProxyHandlerWithPathAndRegister = (target, prop, parentPath) => {
+            let result = this.getProxyHandlerWithPath(target, prop, parentPath);
+            this.propertyUseAnalyzer.registerProperty(this.createPath(parentPath, prop));
+            return result;
+        }
     }
 
     buildProxyHandlers(parentPath) {
@@ -22,16 +18,13 @@ class ReadOnlyProxyBuilder extends PropertyBuilder {
 
         return Object.assign(
             {},
-            {get: (target, prop) => this.getProxyHandlerWithPath(target, prop, parentPath)},
+            {get: (target, prop) => this.getProxyHandlerWithPathAndRegister(target, prop, parentPath)},
             {set: noMutateLambda},
             {defineProperty: noMutateLambda},
             {deleteProperty: noMutateLambda}
         );
     }
 
-    wrap(obj, parentPath) {
-        return new Proxy(obj, this.buildProxyHandlers(parentPath));
-    }
 }
 
 module.exports = ReadOnlyProxyBuilder;
