@@ -18,7 +18,7 @@ class MaximEngine {
 
     execute(workingMemory) {
         return this.rules
-            .filter(r => r.condition(this.readOnlyProxyBuilder.build(workingMemory)))
+            .filter(r => r.condition(this.readOnlyProxyBuilder.wrap(workingMemory)))
             .reduce(this.runConsequence, workingMemory);
     }
 

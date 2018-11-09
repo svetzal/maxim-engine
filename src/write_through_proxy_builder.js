@@ -9,7 +9,7 @@ class WriteThroughProxyBuilder extends PropertyBuilder {
             let nt = Reflect.get(target, prop);
             if (typeof(nt) === "object")
             {
-                nt = this.build(nt, propertyPath);
+                nt = this.wrap(nt, propertyPath);
             }
             return nt;
         };
@@ -46,7 +46,7 @@ class WriteThroughProxyBuilder extends PropertyBuilder {
         );
     }
 
-    build(obj, parentPath) {
+    wrap(obj, parentPath) {
         return new Proxy(obj, this.buildProxyHandlers(parentPath));
     }
 

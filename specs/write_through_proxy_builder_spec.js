@@ -16,14 +16,14 @@ describe('WriteThroughProxyBuilder', () => {
     describe('works with a property listener', () => {
 
         it('should not register property reads', () => {
-           let proxy = builder.build({ key: 123, message: 'hello' });
+           let proxy = builder.wrap({ key: 123, message: 'hello' });
            let a = proxy.message;
            expect(listener.getReferencedProperties()).to.deep.equal([]);
         });
 
         it('should register single property write', () => {
             let newMessage = 'goodbye';
-            let proxy = builder.build({ key: 123, message: 'hello' });
+            let proxy = builder.wrap({ key: 123, message: 'hello' });
             proxy.message = newMessage;
             expect(listener.getReferencedProperties()).to.deep.equal([['message']]);
             expect(proxy.message).to.equal(newMessage);
@@ -31,14 +31,14 @@ describe('WriteThroughProxyBuilder', () => {
 
         it('should register single property defined', () => {
             let message = 'hello';
-            let proxy = builder.build({ key: 123 });
+            let proxy = builder.wrap({ key: 123 });
             proxy.message = message;
             expect(listener.getReferencedProperties()).to.deep.equal([['message']]);
             expect(proxy.message).to.equal(message);
         });
 
         it('should register single property deleted', () => {
-           let proxy = builder.build({ key: 123, message: 'delete me' });
+           let proxy = builder.wrap({ key: 123, message: 'delete me' });
            delete proxy.message;
             expect(listener.getReferencedProperties()).to.deep.equal([['message']]);
             expect(typeof(proxy.message)).to.equal('undefined');
@@ -46,7 +46,7 @@ describe('WriteThroughProxyBuilder', () => {
 
         it('should register single property changed in sub object', () => {
             let newMessage = 'changed';
-            let proxy = builder.build({ key: 123, obj: { message: 'hello' }});
+            let proxy = builder.wrap({ key: 123, obj: { message: 'hello' }});
             proxy.obj.message = newMessage;
             expect(listener.getReferencedProperties()).to.deep.equal([['obj', 'message']]);
             expect(proxy.obj.message).to.equal(newMessage);
