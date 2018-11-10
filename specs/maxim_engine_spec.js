@@ -1,6 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 
+const PropertyUseAnalyzer = require('../src/property_use_analyzer');
 const ReadOnlyProxyBuilder = require('../src/read_only_proxy_builder');
 const WriteThroughProxyBuilder = require('../src/write_through_proxy_builder');
 const MaximEngine = require('../src/maxim_engine');
@@ -10,10 +11,12 @@ describe("MaximEngine", () => {
     var engine, readAnalyzer, writeAnalyzer;
 
     beforeEach(() => {
-        readAnalyzer = { registerProperty: sinon.spy() };
+        // readAnalyzer = {registerProperty: sinon.spy(), reset: sinon.spy(), getReferencedProperties: sinon.spy()};
+        readAnalyzer = new PropertyUseAnalyzer();
         let readOnlyProxyBuilder = new ReadOnlyProxyBuilder(readAnalyzer);
 
-        writeAnalyzer = { registerProperty: sinon.spy() };
+        // writeAnalyzer = {registerProperty: sinon.spy(), reset: sinon.spy(), getReferencedProperties: sinon.spy()};
+        writeAnalyzer = new PropertyUseAnalyzer();
         let writeThroughProxyBuilder = new WriteThroughProxyBuilder(writeAnalyzer);
 
         engine = new MaximEngine(readOnlyProxyBuilder, writeThroughProxyBuilder);
@@ -66,25 +69,49 @@ describe("MaximEngine", () => {
         expect(() => engine.execute({})).to.throw();
     });
 
-    describe("property registration", () => {
+    // describe("property registration", () => {
+    //
+    //     let sampleRule = {
+    //         condition: wm => wm.message === "hello",
+    //         consequence: wm => wm.message = "goodbye"
+    //     };
+    //
+    //     it("should register properties referenced in condition", () => {
+    //         engine.register(sampleRule);
+    //         engine.execute({message: "hello"});
+    //
+    //         expect(readAnalyzer.reset.calledOnce).to.be.true;
+    //         expect(readAnalyzer.getReferencedProperties.calledOnce).to.be.true;
+    //         expect(readAnalyzer.registerProperty.calledWith(["message"])).to.be.true;
+    //     });
+    //
+    //     it("should register properties mutated in consequence", () => {
+    //         engine.register(sampleRule);
+    //         engine.execute({message: "hello"});
+    //
+    //         expect(writeAnalyzer.reset.calledOnce).to.be.true;
+    //         expect(writeAnalyzer.getReferencedProperties.calledOnce).to.be.true;
+    //         expect(writeAnalyzer.registerProperty.calledWith(["message"])).to.be.true;
+    //     });
+    //
+    // });
 
-        let sampleRule = {
-            condition: wm => wm.message === "hello",
-            consequence: wm => wm.message = "goodbye"
+    describe("rule chain", () => {
+
+        let sampleRule1 = {
+            condition: wm => wm.message === 'hello',
+            consequence: wm => wm.message = 'goodbye'
         };
 
-        it("should register properties referenced in condition", () => {
-            engine.register(sampleRule);
-            engine.execute({ message: "hello" });
+        let sampleRule2 = {
+            condition: wm => wm.message === 'goodbye',
+            consequence: wm => wm.message = 'au revoir'
+        };
 
-            expect(readAnalyzer.registerProperty.calledWith(["message"])).to.be.true;
-        });
-
-        it("should register properties mutated in consequence", () => {
-            engine.register(sampleRule);
-            engine.execute({ message: "hello" });
-
-            expect(writeAnalyzer.registerProperty.calledWith(["message"])).to.be.true;
+        it("should re-evaluate the ruleset once", () => {
+            engine.register([sampleRule1, sampleRule2]);
+            let wm = engine.execute({message: 'hello'});
+            expect(wm.message).to.equal('au revoir');
         });
 
     });

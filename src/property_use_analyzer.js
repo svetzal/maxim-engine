@@ -1,6 +1,10 @@
 class PropertyUseAnalyzer {
 
     constructor() {
+        this.reset();
+    }
+
+    reset() {
         this.properties = new Set();
     }
 
