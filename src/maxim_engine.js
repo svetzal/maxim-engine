@@ -1,9 +1,8 @@
-const ReadOnlyProxyBuilder = require('./read_only_proxy_builder');
-
 class MaximEngine {
-    constructor(readOnlyProxyBuilder) {
+    constructor(readOnlyProxyBuilder, writeThroughProxyBuilder) {
         this.rules = [];
         this.readOnlyProxyBuilder = readOnlyProxyBuilder;
+        this.writeThroughProxyBuilder = writeThroughProxyBuilder;
     }
 
     register(param) {
@@ -19,13 +18,14 @@ class MaximEngine {
     execute(workingMemory) {
         return this.rules
             .filter(r => r.condition(this.readOnlyProxyBuilder.wrap(workingMemory)))
-            .reduce(this.runConsequence, workingMemory);
+            .reduce((wm, rule) => this.runConsequence(wm, rule), workingMemory);
     }
 
     // noinspection JSMethodCanBeStatic
     runConsequence(workingMemory, rule) {
         let workingMemoryCopy = Object.assign({}, workingMemory);
-        rule.consequence(workingMemoryCopy);
+        let wrappedWorkingMemory = this.writeThroughProxyBuilder.wrap(workingMemoryCopy);
+        rule.consequence(wrappedWorkingMemory);
         return workingMemoryCopy;
     }
 
