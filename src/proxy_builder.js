@@ -19,6 +19,14 @@ class ProxyBuilder {
     wrap(obj, parentPath) {
         return new Proxy(obj, this.buildProxyHandlers(parentPath));
     }
+
+    reset() {
+        this.propertyUseAnalyzer.reset();
+    }
+
+    getReferencedProperties() {
+        return this.propertyUseAnalyzer.getReferencedProperties();
+    }
 }
 
 module.exports = ProxyBuilder;
