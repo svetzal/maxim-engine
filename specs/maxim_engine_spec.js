@@ -6,16 +6,14 @@ const ReadOnlyProxyBuilder = require('../src/read_only_proxy_builder');
 const WriteThroughProxyBuilder = require('../src/write_through_proxy_builder');
 const MaximEngine = require('../src/maxim_engine');
 
-describe("MaximEngine", () => {
+describe("MaximEngine Integration", () => {
 
     var engine, readAnalyzer, writeAnalyzer;
 
     beforeEach(() => {
-        // readAnalyzer = {registerProperty: sinon.spy(), reset: sinon.spy(), getReferencedProperties: sinon.spy()};
         readAnalyzer = new PropertyUseAnalyzer();
         let readOnlyProxyBuilder = new ReadOnlyProxyBuilder(readAnalyzer);
 
-        // writeAnalyzer = {registerProperty: sinon.spy(), reset: sinon.spy(), getReferencedProperties: sinon.spy()};
         writeAnalyzer = new PropertyUseAnalyzer();
         let writeThroughProxyBuilder = new WriteThroughProxyBuilder(writeAnalyzer);
 
@@ -68,33 +66,6 @@ describe("MaximEngine", () => {
 
         expect(() => engine.execute({})).to.throw();
     });
-
-    // describe("property registration", () => {
-    //
-    //     let sampleRule = {
-    //         condition: wm => wm.message === "hello",
-    //         consequence: wm => wm.message = "goodbye"
-    //     };
-    //
-    //     it("should register properties referenced in condition", () => {
-    //         engine.register(sampleRule);
-    //         engine.execute({message: "hello"});
-    //
-    //         expect(readAnalyzer.reset.calledOnce).to.be.true;
-    //         expect(readAnalyzer.getReferencedProperties.calledOnce).to.be.true;
-    //         expect(readAnalyzer.registerProperty.calledWith(["message"])).to.be.true;
-    //     });
-    //
-    //     it("should register properties mutated in consequence", () => {
-    //         engine.register(sampleRule);
-    //         engine.execute({message: "hello"});
-    //
-    //         expect(writeAnalyzer.reset.calledOnce).to.be.true;
-    //         expect(writeAnalyzer.getReferencedProperties.calledOnce).to.be.true;
-    //         expect(writeAnalyzer.registerProperty.calledWith(["message"])).to.be.true;
-    //     });
-    //
-    // });
 
     describe("rule chain", () => {
 
