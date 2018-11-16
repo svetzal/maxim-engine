@@ -29,7 +29,7 @@ class MaximEngine {
             .filter(rule => this.checkCondition(workingMemory, rule))
             .reduce((wm, rule) => this.runConsequence(wm, rule), workingMemory);
 
-        // TODO: This is UGLY! Replace this naiive implementation
+        // TODO: This is UGLY! Replace this naive implementation
         this.ruleConsequenceReferences.forEach(consTuple => {
             this.ruleConditionReferences.forEach(condTuple => {
                 if (_.isEqual(consTuple[1], condTuple[1])) {
