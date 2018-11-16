@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Stacey Vetzal
+ */
+
 const expect = require('chai').expect;
 
 const ReadOnlyProxyBuilder = require('../src/read_only_proxy_builder');

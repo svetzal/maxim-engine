@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Stacey Vetzal
+ */
+
 class PropertyUseAnalyzer {
 
     constructor() {

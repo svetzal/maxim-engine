@@ -64,3 +64,13 @@ Once you have loaded your rules into the engine, you can use it as many times as
 let result = engine.execute({ message: "Change me!" });
 console.log(result.message); // Outputs "Hello, World!"
 ```
+
+# Distributed Openly, Built Openly
+
+This project is licensed under the very permissive MIT license and Copyright (c) 2018 Stacey Vetzal.
+
+My goal is that the entirety of this system will be built openly via [the Twitch platform](https://www.twitch.tv). While traditionally a game-streaming platform, Twitch offers a remarkable experience for the streamer, and I hope that the archive of streams will be perhaps useful for educational purposes.
+
+You can watch the entirety of Maxim-Engine's construction via the following [Twitch collection](https://www.twitch.tv/collections/5ftbYtNbXRX9DQ).
+
+I welcome engagement, real time over [Twitch](https://www.twitch.tv/svetzal), or via [Github](https://github.com/svetzal/maxim-engine).

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Stacey Vetzal
+ */
+
 const ProxyBuilder = require('./proxy_builder');
 
 class ReadOnlyProxyBuilder extends ProxyBuilder {
