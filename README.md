@@ -4,12 +4,26 @@
 
 # Maxim Engine
 
-Maxim is a simple rule engine, really simple for now. I'd like one day to make it better, but I haven't yet.
+Maxim is a simple rule engine, getting better a step at a time.
+
+This release contains the ability to recognize when consequences change properties referenced by conditions, and re-run the ruleset a single time.
+
+The engine lazily evaluates referenced properties in working memory and uses Reflect / Proxy to intercept and record when they change.
 
 ## Limitations
 
-- will only run through ruleset once, if rules change working memory things won't re-fire
+- will only run through ruleset at most twice, if rules change working memory things will fire only one more time
 - probably more I haven't thought of...
+
+## Roadmap (tentative)
+
+These will change depending on community engagement, and my own needs.
+
+- ability to specify a rule priority to influence run order
+- ability to name rules
+- explore smarter algorithms to execute across the ruleset
+  - loop detection
+  - conflict resolution
 
 ## Usage
 
