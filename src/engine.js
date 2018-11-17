@@ -3,9 +3,18 @@
  */
 
 const _ = require('lodash');
+const PropertyUseAnalyzer = require('./property_use_analyzer');
+const ReadOnlyProxyBuilder = require('./read_only_proxy_builder');
+const WriteThroughProxyBuilder = require('./write_through_proxy_builder');
 
-class MaximEngine {
-    constructor(readOnlyProxyBuilder, writeThroughProxyBuilder) {
+let readAnalyzer = new PropertyUseAnalyzer();
+let defaultReadOnlyProxyBuilder = new ReadOnlyProxyBuilder(readAnalyzer);
+
+let writeAnalyzer = new PropertyUseAnalyzer();
+let defaultWriteThroughProxyBuilder = new WriteThroughProxyBuilder(writeAnalyzer);
+
+class Engine {
+    constructor(readOnlyProxyBuilder=defaultReadOnlyProxyBuilder, writeThroughProxyBuilder=defaultWriteThroughProxyBuilder) {
         if (typeof(readOnlyProxyBuilder) === 'undefined') throw "Must provide a ReadOnlyProxyBuilder";
         if (typeof(writeThroughProxyBuilder) === 'undefined') throw "Must provide a WriteThroughProxyBuilder";
 
@@ -54,9 +63,9 @@ class MaximEngine {
 
     // noinspection JSMethodCanBeStatic
     runConsequence(workingMemory, rule) {
+        this.writeThroughProxyBuilder.reset();
         let workingMemoryCopy = Object.assign({}, workingMemory);
         let wrappedWorkingMemory = this.writeThroughProxyBuilder.wrap(workingMemoryCopy);
-        this.writeThroughProxyBuilder.reset();
         rule.consequence(wrappedWorkingMemory);
         this.ruleConsequenceReferences.push([rule, this.writeThroughProxyBuilder.getReferencedProperties()]);
         return workingMemoryCopy;
@@ -67,4 +76,4 @@ class MaximEngine {
     }
 }
 
-module.exports = MaximEngine;
+module.exports = Engine;
