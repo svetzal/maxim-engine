@@ -30,6 +30,7 @@ These will change depending on community engagement, and my own needs.
 Initialize yourself an instance of the `MaximEngine`
 
 ```js
+const { MaximEngine } = require('maxim-engine');
 let engine = new MaximEngine();
 ```
 
