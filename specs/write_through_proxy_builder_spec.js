@@ -33,7 +33,7 @@ describe('WriteThroughProxyBuilder', () => {
             expect(proxy.message).to.equal(newMessage);
         });
 
-        it('should register single property defined', () => {
+        it('should register single property defined by set', () => {
             let message = 'hello';
             let proxy = builder.wrap({ key: 123 });
             proxy.message = message;
@@ -46,6 +46,13 @@ describe('WriteThroughProxyBuilder', () => {
            delete proxy.message;
             expect(listener.getReferencedProperties()).to.deep.equal([['message']]);
             expect(typeof(proxy.message)).to.equal('undefined');
+        });
+
+        it('should register single property defined through Object', () => {
+            let message = "hello";
+            let proxy = builder.wrap({});
+            Object.defineProperty(proxy, 'message', { value: message, writable: false }); // TODO: Test around this writable attr?
+            expect(listener.getReferencedProperties()).to.deep.equal([['message']]);
         });
 
         it('should register single property changed in sub object', () => {
