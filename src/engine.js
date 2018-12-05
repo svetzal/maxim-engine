@@ -37,21 +37,37 @@ class Engine {
         this.rules.push(rule);
     }
 
-    execute(workingMemory) {
-        let firstGeneration = this.rules
-            .filter(rule => this.checkCondition(workingMemory, rule))
-            .reduce((wm, rule) => this.runConsequence(wm, rule), workingMemory);
+    execute(workingMemory, maxGenerations=10) {
+        var rulesList = this.rules;
+        return this.processRules(rulesList, workingMemory, maxGenerations);
+    }
 
-        // TODO: This is UGLY! Replace this naive implementation
-        this.ruleConsequenceReferences.forEach(consTuple => {
-            this.ruleConditionReferences.forEach(condTuple => {
-                if (_.isEqual(consTuple[1], condTuple[1])) {
-                    firstGeneration = this.runConsequence(firstGeneration, condTuple[0]);
-                }
+    processRules(rulesList, results, count) {
+        var newResults = results;
+
+        if (count > 0) {
+
+            // TODO: Sort rulesList by priority
+
+            if (rulesList.length > 0) {
+                newResults = rulesList
+                    .filter(rule => this.checkCondition(results, rule))
+                    .reduce((wm, rule) => this.runConsequence(wm, rule), results);
+            }
+
+            let newRulesList = [];
+            this.ruleConsequenceReferences.forEach(consTuple => {
+                this.ruleConditionReferences.forEach(condTuple => {
+                    if (_.isEqual(consTuple[1], condTuple[1])) {
+                        if (!newRulesList.includes(condTuple[0])) newRulesList.push(condTuple[0]);
+                    }
+                });
             });
-        });
 
-        return firstGeneration;
+            newResults = this.processRules(newRulesList, newResults, count-1);
+        }
+
+        return newResults;
     }
 
     checkCondition(workingMemory, rule) {

@@ -57,28 +57,25 @@ describe('Engine', () => {
                 condition: wm => wm.data === "dummy",
                 consequence: wm => wm.data = "transformed"
             });
-            engine.execute(dummyData);
+            engine.execute(dummyData, 2);
         });
 
         describe('with ReadOnlyProxyBuilder', () => {
             it('should reset referenced properties', () => {
-                expect(readOnlyProxyBuilderDouble.reset.callCount).to.equal(1);
+                expect(readOnlyProxyBuilderDouble.reset.callCount).to.equal(2);
             });
 
             it('should wrap working memory after reset', () => {
-                expect(readOnlyProxyBuilderDouble.wrap.callCount).to.equal(1);
+                expect(readOnlyProxyBuilderDouble.wrap.callCount).to.equal(2);
                 expect(readOnlyProxyBuilderDouble.reset.calledBefore(readOnlyProxyBuilderDouble.wrap)).to.be.true;
             });
 
             it('should provide referenced properties', () => {
-                expect(readOnlyProxyBuilderDouble.getReferencedProperties.callCount).to.equal(1);
+                expect(readOnlyProxyBuilderDouble.getReferencedProperties.callCount).to.equal(2);
             });
         });
 
-        describe('with writeThroughProxyBuilder, calls made twice', () => {
-            // Twice because the consequence in the sample rule above fires the rule a second time by changing the
-            // referenced property in the condition
-
+        xdescribe('with writeThroughProxyBuilder, calls made twice', () => {
             it('should reset referenced properties', () => {
                 expect(writeThroughProxyBuilderDouble.reset.callCount).to.equal(2);
             });
@@ -88,11 +85,35 @@ describe('Engine', () => {
                 expect(writeThroughProxyBuilderDouble.reset.calledBefore(writeThroughProxyBuilderDouble.wrap)).to.be.true;
             });
 
-            it('should provide referenced properties', () => {
+            it('should show 2 referenced properties calls because condition property was mutated', () => {
                 expect(writeThroughProxyBuilderDouble.getReferencedProperties.callCount).to.equal(2);
             });
         });
     });
 
+    describe('prioritization', () => {
+
+        beforeEach(() => {
+            engine.register([
+                {
+                    condition: wm => true,
+                    consequence: wm => {
+                        console.log("one",wm);
+                        wm.func1();
+                        return wm;
+                    }
+                },
+                {
+                    condition: wm => true,
+                    consequence: wm => {
+                        console.log("two",wm);
+                        wm.func2();
+                        return wm;
+                    }
+                }
+            ]);
+        });
+
+    });
 
 });

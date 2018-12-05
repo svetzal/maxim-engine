@@ -4,9 +4,9 @@
 
 const expect = require('chai').expect;
 
-const { MaximEngine } = require('../index');
+const {MaximEngine} = require('../index');
 
-describe("MaximEngine Integration", () => {
+describe("MaximEngine Public Functionality", () => {
 
     var engine, readAnalyzer, writeAnalyzer;
 
@@ -54,6 +54,29 @@ describe("MaximEngine Integration", () => {
             engine.register([sampleRule1, sampleRule2]);
             let wm = engine.execute({message: 'hello'});
             expect(wm.message).to.equal('au revoir');
+        });
+
+    });
+
+    xdescribe("prioritization", () => {
+
+        let rules = [
+            {
+                priority: 100,
+                condition: wm => wm.value === 1,
+                consequence: wm => wm.value = 100
+            },
+            {
+                priority: 1,
+                condition: wm => wm.value === 1,
+                consequence: wm => wm.value = 10
+            }
+        ];
+
+        it("should evaluate the rules in priority order", () => {
+            engine.register(rules);
+            let wm = engine.execute({value: 1});
+            expect(wm.value).to.equal(100);
         });
 
     });
