@@ -58,7 +58,7 @@ describe("MaximEngine Public Functionality", () => {
 
     });
 
-    xdescribe("prioritization", () => {
+    describe("prioritization", () => {
 
         let rules = [
             {

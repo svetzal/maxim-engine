@@ -13,6 +13,12 @@ let defaultReadOnlyProxyBuilder = new ReadOnlyProxyBuilder(readAnalyzer);
 let writeAnalyzer = new PropertyUseAnalyzer();
 let defaultWriteThroughProxyBuilder = new WriteThroughProxyBuilder(writeAnalyzer);
 
+function sortByPriority(a,b) {
+    if (a.priority > b.priority) return -1;
+    if (a.priority < b.priority) return 1;
+    return 0;
+}
+
 class Engine {
     constructor(readOnlyProxyBuilder=defaultReadOnlyProxyBuilder, writeThroughProxyBuilder=defaultWriteThroughProxyBuilder) {
         if (typeof(readOnlyProxyBuilder) === 'undefined') throw "Must provide a ReadOnlyProxyBuilder";
@@ -38,36 +44,36 @@ class Engine {
     }
 
     execute(workingMemory, maxGenerations=10) {
-        var rulesList = this.rules;
-        return this.processRules(rulesList, workingMemory, maxGenerations);
+        return this.processRules(this.rules, workingMemory, maxGenerations);
     }
 
-    processRules(rulesList, results, count) {
-        var newResults = results;
+    processRules(rulesList, workingMemory, count) {
+        var currentMemory = workingMemory;
 
         if (count > 0) {
-
-            // TODO: Sort rulesList by priority
-
             if (rulesList.length > 0) {
-                newResults = rulesList
-                    .filter(rule => this.checkCondition(results, rule))
-                    .reduce((wm, rule) => this.runConsequence(wm, rule), results);
-            }
+                rulesList
+                    .sort(sortByPriority)
+                    .forEach(rule => {
+                        if (this.checkCondition(currentMemory, rule)) {
+                            currentMemory = this.runConsequence(currentMemory, rule);
+                        }
+                    });
 
-            let newRulesList = [];
-            this.ruleConsequenceReferences.forEach(consTuple => {
-                this.ruleConditionReferences.forEach(condTuple => {
-                    if (_.isEqual(consTuple[1], condTuple[1])) {
-                        if (!newRulesList.includes(condTuple[0])) newRulesList.push(condTuple[0]);
-                    }
+                let newRulesList = [];
+                this.ruleConsequenceReferences.forEach(consTuple => {
+                    this.ruleConditionReferences.forEach(condTuple => {
+                        if (_.isEqual(consTuple[1], condTuple[1])) {
+                            if (!newRulesList.includes(condTuple[0])) newRulesList.push(condTuple[0]);
+                        }
+                    });
                 });
-            });
 
-            newResults = this.processRules(newRulesList, newResults, count-1);
+                currentMemory = this.processRules(newRulesList, currentMemory, count-1);
+            }
         }
 
-        return newResults;
+        return currentMemory;
     }
 
     checkCondition(workingMemory, rule) {
