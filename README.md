@@ -6,20 +6,22 @@
 
 Maxim is a simple rule engine, getting better a step at a time.
 
-This release contains the ability to recognize when consequences change properties referenced by conditions, and re-run the ruleset a single time.
+The engine will recognize when a consequence changes a property in working memory that is referenced by a registered rule. When this happens, it will re-run the rule-set.
+
+It does not (yet) do loop detection so it will re-run the rule-set a defined number of times (default is 10).
 
 The engine lazily evaluates referenced properties in working memory and uses Reflect / Proxy to intercept and record when they change.
 
 ## Limitations
 
-- will only run through ruleset at most twice, if rules change working memory things will fire only one more time
+- no loop detection / conflict resolution
+- no optimization of rule re-runs
 - probably more I haven't thought of...
 
 ## Roadmap (tentative)
 
 These will change depending on community engagement, and my own needs.
 
-- ability to specify a rule priority to influence run order
 - ability to name rules
 - explore smarter algorithms to execute across the ruleset
   - loop detection
@@ -64,6 +66,35 @@ Once you have loaded your rules into the engine, you can use it as many times as
 ```js
 let result = engine.execute({ message: "Change me!" });
 console.log(result.message); // Outputs "Hello, World!"
+```
+
+With a more sophisticated ruleset, if you want to ensure a maximum number of working memory generations (in case you have loops) you can do so like this:
+
+```js
+let result = engine.execute({ message: "Change me!" }, 100);
+// evaluates a maximum of 100 generations of working memory
+```
+
+## Prioritizing Rules
+
+Rules can be prioritized with a property called `priority`. Higher integers represent higher priority.
+
+```js
+engine.register([
+    {
+        priority: 100,
+        condition: wm => wm.value === 1,
+        consequence: wm => wm.value = 100
+    },
+    {
+        priority: 1,
+        condition: wm => wm.value === 1,
+        consequence: wm => wm.value = 10
+    }
+]);
+
+let result = engine.execute({value: 1});
+// { value: 100 }
 ```
 
 # Distributed Openly, Built Openly
