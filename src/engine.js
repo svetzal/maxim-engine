@@ -44,7 +44,16 @@ class Engine {
     }
 
     execute(workingMemory, maxGenerations=10) {
-        return this.processRules(this.rules, workingMemory, maxGenerations);
+        this.initializeInstrumentation();
+        let result = this.processRules(this.rules, workingMemory, maxGenerations);
+        this.lastExecution.time = Date.now() - this.lastExecution.start;
+        return result;
+    }
+
+    initializeInstrumentation() {
+        this.lastExecution = {
+            start: Date.now()
+        };
     }
 
     processRules(rulesList, workingMemory, count) {
