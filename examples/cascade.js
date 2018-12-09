@@ -10,7 +10,6 @@ let engine = new MaximEngine();
 engine.register({
     priority: 10,
     description: 'Default message, if none provided, is hello.',
-    // condition: wm => typeof (wm.message) === 'undefined',
     condition: wm => !('message' in wm),
     consequence: wm => wm.message = 'hello'
 });

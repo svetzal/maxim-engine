@@ -98,6 +98,12 @@ describe('ReadOnlyProxyBuilder', () => {
             expect(listener.getReferencedProperties()).to.deep.equal([['message']]);
         });
 
+        it('should register property usage with object "in" keyword', () => {
+            let proxy = builder.wrap({ key: 123, message: 'hello' });
+            let accessed = 'message' in proxy;
+            expect(listener.getReferencedProperties()).to.deep.equal([['message']]);
+        });
+
         it('should register multiple property usages', () => {
             let proxy = builder.wrap({ key: 123, message: 'hello' });
             let a = proxy.message;
