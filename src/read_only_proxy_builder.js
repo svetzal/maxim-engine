@@ -12,7 +12,14 @@ class ReadOnlyProxyBuilder extends ProxyBuilder {
             let result = this.getProxyHandlerWithPath(target, prop, parentPath);
             this.propertyUseAnalyzer.registerProperty(this.createPath(parentPath, prop));
             return result;
-        }
+        };
+
+        this.hasProxyHandlerWithPathAndRegister = (target, prop, parentPath) => {
+            let result = Reflect.has(target, prop);
+            this.propertyUseAnalyzer.registerProperty(this.createPath(parentPath, prop));
+            return result;
+        };
+
     }
 
     buildProxyHandlers(parentPath) {
@@ -23,6 +30,7 @@ class ReadOnlyProxyBuilder extends ProxyBuilder {
         return Object.assign(
             {},
             {get: (target, prop) => this.getProxyHandlerWithPathAndRegister(target, prop, parentPath)},
+            {has: (target, prop) => this.hasProxyHandlerWithPathAndRegister(target, prop, parentPath)},
             {set: noMutateLambda},
             {defineProperty: noMutateLambda},
             {deleteProperty: noMutateLambda}
