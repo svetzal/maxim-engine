@@ -37,6 +37,12 @@ describe('ReadOnlyProxyBuilder', () => {
             expect(() => delete proxy.message).to.throw();
         });
 
+        it('should handle the "in" keyword correctly for object properties', () => {
+            let proxy = builder.wrap({message: "blah"});
+            expect('message' in proxy).to.be.true;
+            expect(!('missing' in proxy)).to.be.true;
+        })
+
     });
 
     describe("nested objects", () => {

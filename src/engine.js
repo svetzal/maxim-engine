@@ -52,7 +52,8 @@ class Engine {
 
     initializeInstrumentation() {
         this.lastExecution = {
-            start: Date.now()
+            start: Date.now(),
+            generations: []
         };
     }
 
@@ -99,6 +100,7 @@ class Engine {
         let wrappedWorkingMemory = this.writeThroughProxyBuilder.wrap(workingMemoryCopy);
         rule.consequence(wrappedWorkingMemory);
         this.ruleConsequenceReferences.push([rule, this.writeThroughProxyBuilder.getReferencedProperties()]);
+        this.lastExecution.generations.push({rule: rule, initial: workingMemory, result: workingMemoryCopy});
         return workingMemoryCopy;
     }
 

@@ -11,14 +11,9 @@ engine.register({
     consequence: wm => wm.message = 'goodbye'
 });
 
-engine.register({
-    condition: wm => wm.message === 'goodbye',
-    consequence: wm => wm.message = 'au revoir'
-});
-
 let wm = engine.execute({ message: 'hello' });
 
 console.log("Run complete");
-console.log(`  ${engine.rules.length} rules executed`);
+console.log(`  ${engine.rules.length} rules registered`);
 console.log(`  ${engine.lastExecution.time} ms`);
 console.log("Result:", wm);

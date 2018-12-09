@@ -40,7 +40,7 @@ Rules have two components, a `condition` and a `consequence`. Each component nee
 
 A `condition` is a lambda that takes an instance of the engine's Working Memory and returns a boolean value that indicates to the engine that the consequence applies.
 
-eg. `(wm) => !'message' in wm`
+eg. `(wm) => !('message' in wm)`
 
 A `consequence` is a lambda that mutates the provided working memory (which is actually a copy of the original working memory in order to avoid side-effects).
 
@@ -50,7 +50,7 @@ So here is an example of a complete rule:
 
 ```js
 let rule = {
-    condition: (wm) => !'message' in wm,
+    condition: (wm) => !('message' in wm),
     consequence: (wm) => wm.message = "Hello, World!"
 };
 ```

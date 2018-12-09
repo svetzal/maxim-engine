@@ -81,4 +81,55 @@ describe("MaximEngine Public Functionality", () => {
 
     });
 
+    describe("instrumentation", () => {
+
+        let rules = [
+            {
+                priority: 10,
+                description: 'Default message, if none provided, is hello.',
+                condition: wm => !('message' in wm),
+                consequence: wm => wm.message = 'hello'
+            },
+            {
+                description: 'When the message is hello, change it to goodbye.',
+                condition: wm => wm.message === 'hello',
+                consequence: wm => wm.message = 'goodbye'
+            },
+            {
+                description: 'Registered, but will not fire.',
+                condition: wm => false,
+                consequence: wm => wm
+            }
+        ];
+
+        let wmGenerations;
+
+        beforeEach(() => {
+            engine.register(rules);
+            engine.execute({});
+            wmGenerations = engine.lastExecution.generations;
+        });
+
+        it('should include which rules ran', () => {
+            expect(wmGenerations.length).to.equal(2);
+            expect(wmGenerations[0].rule).to.deep.equal(rules[0]);
+            expect(wmGenerations[1].rule).to.deep.equal(rules[1]);
+        });
+
+        it('should include the incoming working memory for each rule run', () => {
+            expect(wmGenerations[0].initial).to.deep.equal({});
+            expect(wmGenerations[1].initial).to.deep.equal({message: 'hello'});
+        });
+
+        it('should include the outgoing working memory for each rule run', () => {
+            expect(wmGenerations[0].result).to.deep.equal({message: 'hello'});
+            expect(wmGenerations[1].result).to.deep.equal({message: 'goodbye'});
+        });
+
+        it('should provide timing of the rule run', () => {
+            expect(engine.lastExecution.time).to.not.be.null;
+        });
+
+    });
+
 });
