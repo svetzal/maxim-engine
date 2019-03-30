@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Stacey Vetzal
  */
 
-const _ = require('lodash');
+const isEqual = require('lodash/isEqual');
 const PropertyUseAnalyzer = require('./property_use_analyzer');
 const ReadOnlyProxyBuilder = require('./read_only_proxy_builder');
 const WriteThroughProxyBuilder = require('./write_through_proxy_builder');
@@ -73,7 +73,7 @@ class Engine {
                 let newRulesList = [];
                 this.ruleConsequenceReferences.forEach(consTuple => {
                     this.ruleConditionReferences.forEach(condTuple => {
-                        if (_.isEqual(consTuple[1], condTuple[1])) {
+                        if (isEqual(consTuple[1], condTuple[1])) {
                             if (!newRulesList.includes(condTuple[0])) newRulesList.push(condTuple[0]);
                         }
                     });
