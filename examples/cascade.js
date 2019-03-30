@@ -21,9 +21,11 @@ engine.register({
 });
 
 let wm = engine.execute({});
+let engineState = engine.inspect();
 
 console.log("Run complete");
 console.log(`  ${engine.rules.length} rules registered`);
-console.log(`  ${engine.lastExecution.time} ms`);
+console.log(`  ${engineState.totalExecutionTime} ms total run time`);
+console.log(`  ${engineState.generations.length} generations run`);
 console.log("Result:", wm);
-console.log("Instrumentation:", util.inspect(engine.lastExecution, false, null, true));
+console.log("Instrumentation:", util.inspect(engineState, false, null, true));

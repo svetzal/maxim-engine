@@ -7,6 +7,8 @@ const PropertyUseAnalyzer = require('./property_use_analyzer');
 const ReadOnlyProxyBuilder = require('./read_only_proxy_builder');
 const WriteThroughProxyBuilder = require('./write_through_proxy_builder');
 
+const [ STATE_UNINITIALIZED, STATE_READY, STATE_LOADED ] = [ 'uninitialized', 'ready', 'loaded' ];
+
 let readAnalyzer = new PropertyUseAnalyzer();
 let defaultReadOnlyProxyBuilder = new ReadOnlyProxyBuilder(readAnalyzer);
 
@@ -31,9 +33,12 @@ class Engine {
 
         this.ruleConditionReferences = [];
         this.ruleConsequenceReferences = [];
+
+        this.state = STATE_UNINITIALIZED;
     }
 
     register(param) {
+        if (this.state === STATE_LOADED) throw `Already called execute() can't add more rules`;
         if (!Array.isArray(param)) return this.registerSingleRule(param);
         param.forEach(r => this.registerSingleRule(r));
     }
@@ -41,12 +46,18 @@ class Engine {
     registerSingleRule(rule) {
         if (this.rules.includes(rule)) throw "Rule already registered";
         this.rules.push(rule);
+        this.state = STATE_READY;
     }
 
     execute(workingMemory, maxGenerations=10) {
+        if (this.state === STATE_UNINITIALIZED) throw `Load rules before executing`;
+
         this.initializeInstrumentation();
         let result = this.processRules(this.rules, workingMemory, maxGenerations);
-        this.lastExecution.time = Date.now() - this.lastExecution.start;
+        this.lastExecution.totalExecutionTime = Date.now() - this.lastExecution.start;
+
+        this.state = STATE_LOADED;
+
         return result;
     }
 
@@ -55,6 +66,10 @@ class Engine {
             start: Date.now(),
             generations: []
         };
+    }
+
+    inspect() {
+        return this.lastExecution;
     }
 
     processRules(rulesList, workingMemory, count) {

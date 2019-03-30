@@ -39,9 +39,8 @@ describe('Engine', () => {
             }).to.throw();
         });
 
-        it("should pass working memory unchanged when no rules", () => {
-            let workingMemory = {data: "thingie"};
-            expect(engine.execute(workingMemory)).to.deep.equal(workingMemory);
+        it("should throw exception when no rules", () => {
+            expect(_ => engine.execute({})).to.throw;
         });
 
     });

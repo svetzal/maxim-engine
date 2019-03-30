@@ -50,6 +50,7 @@ So here is an example of a complete rule:
 
 ```js
 let rule = {
+    description: 'Say hello, Charlie',
     condition: (wm) => !('message' in wm),
     consequence: (wm) => wm.message = "Hello, World!"
 };
@@ -83,11 +84,13 @@ Rules can be prioritized with a property called `priority`. Higher integers repr
 engine.register([
     {
         priority: 100,
+        description: 'Really important',
         condition: wm => wm.value === 1,
         consequence: wm => wm.value = 100
     },
     {
         priority: 1,
+        description: 'Less important',
         condition: wm => wm.value === 1,
         consequence: wm => wm.value = 10
     }

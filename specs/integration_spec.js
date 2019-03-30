@@ -16,6 +16,10 @@ describe("MaximEngine Public Functionality", () => {
         writeAnalyzer = engine.writeThroughProxyBuilder.propertyUseAnalyzer;
     });
 
+    it("should not execute without rules", () => {
+        expect(_ => engine.execute({})).to.throw();
+    });
+
     it("should process a simple rule", () => {
         let initialValue = "initial";
         let transformedValue = "transformed";
@@ -27,6 +31,17 @@ describe("MaximEngine Public Functionality", () => {
         let output = engine.execute({data: initialValue});
 
         expect(output).to.deep.equal({data: transformedValue});
+    });
+
+    it("should disallow adding more rules after execution", () => {
+        let createRule = (msg) => ({
+            condition: wm => wm.message === msg,
+            consequence: wm => wm
+        });
+        engine.register(createRule(1));
+        engine.execute({});
+
+        expect(_ => engine.register(createRule(2))).to.throw();
     });
 
     it("should not be able to mutate working memory in a condition", () => {
